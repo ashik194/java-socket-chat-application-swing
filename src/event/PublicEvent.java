@@ -13,8 +13,8 @@ public class PublicEvent {
     private static PublicEvent instance;
     private EventImageView eventImageView;
     private EventChat eventChat;
-//    private EventMain eventMain;
-//    private EventLogin eventLogin;
+    private EventLogin eventLogin;
+    private EventMain eventMain;
 //    private EventMenuLeft eventMenuLeft;
 
     public static PublicEvent getInstance() {
@@ -44,22 +44,26 @@ public class PublicEvent {
         return eventChat;
     }
 
-//    public void addEventMain(EventMain event) {
-//        this.eventMain = event;
-//    }
+    public void addEventLogin(EventLogin event) {
+        this.eventLogin = event;
+    }
+    
+    public EventLogin getEventLogin() {
+        return eventLogin;
+    }
 
+    public void addEventMain(EventMain event) {
+        this.eventMain = event;
+    }
 
-//    public void addEventLogin(EventLogin event) {
-//        this.eventLogin = event;
-//    }
+    public EventMain getEventMain() {
+        return eventMain;
+    }
 //
 //    public void addEventMenuLeft(EventMenuLeft event) {
 //        this.eventMenuLeft = event;
 //    }
 //
-//    public EventMain getEventMain() {
-//        return eventMain;
-//    }
 //
 //    public EventImageView getEventImageView() {
 //        return eventImageView;
@@ -67,9 +71,6 @@ public class PublicEvent {
 //
 
 //
-//    public EventLogin getEventLogin() {
-//        return eventLogin;
-//    }
 //
 //    public EventMenuLeft getEventMenuLeft() {
 //        return eventMenuLeft;
