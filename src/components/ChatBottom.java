@@ -62,20 +62,20 @@ public class ChatBottom extends javax.swing.JPanel {
         cmd.setContentAreaFilled(false);
         cmd.setCursor(new Cursor(Cursor.HAND_CURSOR));
         cmd.setIcon(new ImageIcon(getClass().getResource("/icons/send.png")));
-        cmd.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                String text = txt.getText().trim();
-                if (!text.equals("")) {
+//        cmd.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent ae) {
+//                String text = txt.getText().trim();
+//                if (!text.equals("")) {
 //                    PublicEvent.getInstance().getEventChat().sendMessage(text);
-                    txt.setText("");
-                    txt.grabFocus();
-                    refresh();
-                } else {
-                    txt.grabFocus();
-                }
-            }
-        });
+//                    txt.setText("");
+//                    txt.grabFocus();
+//                    refresh();
+//                } else {
+//                    txt.grabFocus();
+//                }
+//            }
+//        });
         panel.add(cmd);
         add(panel);
     }
