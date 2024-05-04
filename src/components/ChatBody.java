@@ -4,7 +4,10 @@
  */
 package components;
 
+import java.awt.Adjustable;
 import java.awt.Color;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollBar;
@@ -22,18 +25,19 @@ public class ChatBody extends javax.swing.JPanel {
     public ChatBody() {
         initComponents();
         init();
-        addItemRight("Send a text message to a group of contacts. Include photos, personalize your texts, and track who clicked your links.");
-        addItemRight("hello\nHi");
-        addItemLeft("Simpletext started as a passion project because I couldn’t find what I was looking for. Most apps were trying to do too much and ended up bloated with features I don’t need. So I built Simpletext based on a simple premise — what if there’s an app that refuses to do more, choosing instead to do just one thing, and do it well? For Simpletext, that one thing is writing.","Kamal");
-        addDate("12/05/2024");
-        String img[] = {"LVQTJq9E^-%NbFNFt7of^-%NM_In"};
-        addItemLeft("hello\nerererew\newewe","Kamal",img);
-        addItemRight("hello\nerererew\newewe");
-        addItemLeft("hello\nerererew\newewe","Kamal", new ImageIcon(getClass().getResource("/icons/testing/cat.png")), new ImageIcon(getClass().getResource("/icons/testing/dog.jpg")));
-        addDate("Today");
-        addItemRight("hello\nerererew\newewe",new ImageIcon(getClass().getResource("/icons/testing/dog.jpg")), new ImageIcon(getClass().getResource("/icons/testing/dog.jpg")));
-        addItemFile("","Kamal","Test.pdf","1 MB");
-        addItemFileRight("Testing","Test.pdf","1 MB");
+//        addItemRight("Send a text message to a group of contacts. Include photos, personalize your texts, and track who clicked your links.");
+//        addItemRight("hello\nHi");
+//        addItemLeft("Simpletext started as a passion project because I couldn’t find what I was looking for. Most apps were trying to do too much and ended up bloated with features I don’t need. So I built Simpletext based on a simple premise — what if there’s an app that refuses to do more, choosing instead to do just one thing, and do it well? For Simpletext, that one thing is writing.","Kamal");
+//        addDate("12/05/2024");
+//        String img[] = {"LVQTJq9E^-%NbFNFt7of^-%NM_In"};
+//        addItemLeft("hello\nerererew\newewe","Kamal",img);
+//        addItemRight("hello\nerererew\newewe");
+//        addItemLeft("hello\nerererew\newewe","Kamal", new ImageIcon(getClass().getResource("/icons/testing/cat.png")), new ImageIcon(getClass().getResource("/icons/testing/dog.jpg")));
+//        addDate("Today");
+//        addItemRight("hello\nerererew\newewe",new ImageIcon(getClass().getResource("/icons/testing/dog.jpg")), new ImageIcon(getClass().getResource("/icons/testing/dog.jpg")));
+//        addItemFile("","Kamal","Test.pdf","1 MB");
+//        addItemFileRight("Testing","Test.pdf","1 MB");
+        addItemLeft("Hi, How are you?","Kamal");
     }
     
     private void init(){
@@ -81,6 +85,8 @@ public class ChatBody extends javax.swing.JPanel {
         item.setImage(image);
         body.repaint();
         body.revalidate();
+        item.setTime();
+        scrollToBottom();
     }
     
     public void addItemFileRight(String text, String fileName, String fileSize){
@@ -137,6 +143,19 @@ public class ChatBody extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    private void scrollToBottom() {
+        JScrollBar verticalBar = sp.getVerticalScrollBar();
+        AdjustmentListener downScroller = new AdjustmentListener() {
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                Adjustable adjustable = e.getAdjustable();
+                adjustable.setValue(adjustable.getMaximum());
+                verticalBar.removeAdjustmentListener(this);
+            }
+        };
+        verticalBar.addAdjustmentListener(downScroller);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel body;

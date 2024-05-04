@@ -12,8 +12,8 @@ public class PublicEvent {
 
     private static PublicEvent instance;
     private EventImageView eventImageView;
+    private EventChat eventChat;
 //    private EventMain eventMain;
-//    private EventChat eventChat;
 //    private EventLogin eventLogin;
 //    private EventMenuLeft eventMenuLeft;
 
@@ -32,18 +32,22 @@ public class PublicEvent {
         this.eventImageView = event;
     }
 
+    public void addEventChat(EventChat event) {
+        this.eventChat = event;
+    }
+
     public EventImageView getEventImageView() {
         return eventImageView;
+    }
+
+    public EventChat getEventChat() {
+        return eventChat;
     }
 
 //    public void addEventMain(EventMain event) {
 //        this.eventMain = event;
 //    }
 
-
-//    public void addEventChat(EventChat event) {
-//        this.eventChat = event;
-//    }
 
 //    public void addEventLogin(EventLogin event) {
 //        this.eventLogin = event;
@@ -61,9 +65,7 @@ public class PublicEvent {
 //        return eventImageView;
 //    }
 //
-//    public EventChat getEventChat() {
-//        return eventChat;
-//    }
+
 //
 //    public EventLogin getEventLogin() {
 //        return eventLogin;

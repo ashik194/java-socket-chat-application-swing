@@ -4,6 +4,7 @@
  */
 package components;
 
+import event.EventChat;
 import event.PublicEvent;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -46,10 +47,10 @@ public class ChatBottom extends javax.swing.JPanel {
                 refresh();
             }
         });
-//        txt.setHintText("Write Message Here ...");
+        txt.setHintText("Write Message Here ...");
         scroll.setViewportView(txt);
         JScrollBar sb = new JScrollBar();
-        sb.setPreferredSize(new Dimension(2, 10));
+        sb.setPreferredSize(new Dimension(2,10));
         scroll.setVerticalScrollBar(sb);
         add(sb);
         add(scroll, "w 100%");
@@ -62,20 +63,27 @@ public class ChatBottom extends javax.swing.JPanel {
         cmd.setContentAreaFilled(false);
         cmd.setCursor(new Cursor(Cursor.HAND_CURSOR));
         cmd.setIcon(new ImageIcon(getClass().getResource("/icons/send.png")));
-//        cmd.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent ae) {
-//                String text = txt.getText().trim();
-//                if (!text.equals("")) {
-//                    PublicEvent.getInstance().getEventChat().sendMessage(text);
-//                    txt.setText("");
-//                    txt.grabFocus();
-//                    refresh();
-//                } else {
-//                    txt.grabFocus();
-//                }
-//            }
-//        });
+        cmd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String text = txt.getText().trim();
+                if (!text.equals("")) {
+                    PublicEvent.getInstance().getEventChat().sendMessage(text);
+//                    EventChat eventChat = PublicEvent.getInstance().getEventChat();
+//if (eventChat != null) {
+//    eventChat.sendMessage(text);
+//    txt.setText("");
+//    txt.grabFocus();
+//    refresh();
+//} 
+                    txt.setText("");
+                    txt.grabFocus();
+                    refresh();
+                } else {
+                    txt.grabFocus();
+                }
+            }
+        });
         panel.add(cmd);
         add(panel);
     }
