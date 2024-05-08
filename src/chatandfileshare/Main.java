@@ -4,7 +4,9 @@
  */
 package chatandfileshare;
 
+import com.formdev.flatlaf.intellijthemes.FlatArcIJTheme;
 import event.EventImageView;
+import event.EventMain;
 import event.PublicEvent;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -12,6 +14,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import swing.ComponentResizer;
 import javax.swing.JFrame;
+import service.Service;
 
 /**
  *
@@ -34,14 +37,26 @@ public class Main extends javax.swing.JFrame {
         com.setMinimumSize(new Dimension(800, 500));
         com.setMaximumSize(Toolkit.getDefaultToolkit().getScreenSize());
         com.setSnapSize(new Dimension(10, 10));
+        login.setVisible(true);
+        loading.setVisible(false);
         view_image.setVisible(false);
-        view_image.setVisible(false);
-        home.setVisible(true);
+        home.setVisible(false);
         initEvent();
-        
+        Service.getInstance().startServer();
     }
     
     private void initEvent() {
+        PublicEvent.getInstance().addEventMain(new EventMain() {
+            @Override
+            public void showLoading(boolean show) {
+                loading.setVisible(show);
+            }
+
+            @Override
+            public void initChat() {
+                home.setVisible(true);
+            }
+        });
         PublicEvent.getInstance().addEventImageView(new EventImageView() {
             @Override
             public void viewImage(Icon image) {
@@ -71,6 +86,8 @@ public class Main extends javax.swing.JFrame {
         chatMinimize = new javax.swing.JButton();
         chatClose = new javax.swing.JButton();
         body = new javax.swing.JLayeredPane();
+        loading = new forms.Loading();
+        login = new forms.Login();
         view_image = new forms.ViewImage();
         home = new forms.Home();
 
@@ -133,6 +150,8 @@ public class Main extends javax.swing.JFrame {
         );
 
         body.setLayout(new java.awt.CardLayout());
+        body.add(loading, "card5");
+        body.add(login, "card4");
         body.setLayer(view_image, javax.swing.JLayeredPane.POPUP_LAYER);
         body.add(view_image, "card3");
         body.add(home, "card2");
@@ -232,7 +251,10 @@ public class Main extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
+        
+        FlatArcIJTheme.setup();
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new Main().setVisible(true);
             }
@@ -246,6 +268,8 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton chatClose;
     private javax.swing.JButton chatMinimize;
     private forms.Home home;
+    private forms.Loading loading;
+    private forms.Login login;
     private javax.swing.JPanel title;
     private forms.ViewImage view_image;
     // End of variables declaration//GEN-END:variables
