@@ -7,7 +7,12 @@ package forms;
 import components.LoginComp;
 import components.RegisterComp;
 import event.EventLogin;
+import event.EventMessage;
 import event.PublicEvent;
+import io.socket.client.Ack;
+import model.Model_Message;
+import model.Model_Register;
+import service.Service;
 
 /**
  *
@@ -42,9 +47,18 @@ public class Login extends javax.swing.JPanel {
                 }).start();
             }
 
+            
             @Override
-            public void register() {
-                System.out.println("Register");
+            public void register(Model_Register data, EventMessage message) {
+                Service.getInstance().getClient().emit("register", data.toJsonObject(), new Ack() {
+                    @Override
+                    public void call(Object... os) {
+                        if (os.length > 0) {
+                            Model_Message ms = new Model_Message((boolean) os[0], os[1].toString());
+                            message.callMessage(ms);
+                        }
+                    }
+                });
             }
 
             @Override
@@ -104,7 +118,7 @@ public class Login extends javax.swing.JPanel {
         );
         slideLayout.setVerticalGroup(
             slideLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 378, Short.MAX_VALUE)
+            .addGap(0, 421, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -162,7 +176,7 @@ public class Login extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(pictureBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 508, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(62, 62, 62)
+                        .addGap(44, 44, 44)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)

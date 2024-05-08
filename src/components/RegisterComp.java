@@ -4,7 +4,10 @@
  */
 package components;
 
+import event.EventMessage;
 import event.PublicEvent;
+import model.Model_Message;
+import model.Model_Register;
 
 /**
  *
@@ -37,6 +40,7 @@ public class RegisterComp extends javax.swing.JPanel {
         goLogin = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         txtConfirmPassword = new javax.swing.JPasswordField();
+        lbError = new javax.swing.JLabel();
 
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
@@ -80,7 +84,8 @@ public class RegisterComp extends javax.swing.JPanel {
         jLabel4.setText("Confirm Password");
 
         txtConfirmPassword.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtConfirmPassword.setText("jPasswordField1");
+
+        lbError.setForeground(new java.awt.Color(204, 0, 0));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -97,7 +102,8 @@ public class RegisterComp extends javax.swing.JPanel {
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtPassword)
                     .addComponent(goLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtConfirmPassword))
+                    .addComponent(txtConfirmPassword)
+                    .addComponent(lbError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -121,7 +127,9 @@ public class RegisterComp extends javax.swing.JPanel {
                 .addComponent(submitRegister)
                 .addGap(18, 18, 18)
                 .addComponent(goLogin)
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbError)
+                .addContainerGap(24, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -132,7 +140,30 @@ public class RegisterComp extends javax.swing.JPanel {
 
     private void submitRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitRegisterActionPerformed
         // TODO add your handling code here:
-        PublicEvent.getInstance().getEventLogin().register();
+        String username = txtUsername.getText().trim();
+        String password = String.valueOf(txtPassword.getPassword());
+        String confirmPassword = String.valueOf(txtConfirmPassword.getPassword());
+        
+         if (username.equals("")) {
+            txtUsername.grabFocus();
+        } else if (password.equals("")) {
+            txtPassword.grabFocus();
+        } else if (!password.equals(confirmPassword)) {
+            txtPassword.grabFocus();
+        } else {
+            Model_Register data = new Model_Register(username, password);
+            PublicEvent.getInstance().getEventLogin().register(data, new EventMessage() {
+                @Override
+                public void callMessage(Model_Message message) {
+                    if (!message.isAction()) {
+                        lbError.setText(message.getMessage());
+                    } else {
+                        PublicEvent.getInstance().getEventLogin().login();
+                    }
+                }
+            });
+        }
+        
     }//GEN-LAST:event_submitRegisterActionPerformed
 
 
@@ -142,6 +173,7 @@ public class RegisterComp extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel lbError;
     private javax.swing.JButton submitRegister;
     private javax.swing.JPasswordField txtConfirmPassword;
     private javax.swing.JPasswordField txtPassword;

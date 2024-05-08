@@ -14,6 +14,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import swing.ComponentResizer;
 import javax.swing.JFrame;
+import service.Service;
 
 /**
  *
@@ -41,7 +42,7 @@ public class Main extends javax.swing.JFrame {
         view_image.setVisible(false);
         home.setVisible(false);
         initEvent();
-        
+        Service.getInstance().startServer();
     }
     
     private void initEvent() {

@@ -4,6 +4,8 @@
  */
 package event;
 
+import model.Model_Register;
+
 /**
  *
  * @author ORANGEBD
@@ -12,7 +14,7 @@ public interface EventLogin {
 
     public void login();
 
-    public void register();
+    public void register(Model_Register data, EventMessage message);
 
     public void goRegister();
 
