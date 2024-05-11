@@ -10,9 +10,12 @@ import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
+import java.util.List;
 import javax.swing.JTextArea;
 import model.Model_Message;
 import model.Model_Register;
+import model.Model_User_Account;
+import java.sql.SQLException;
 
 /**
  *
@@ -21,6 +24,7 @@ import model.Model_Register;
 public class Service {
     private static Service instance;
     private SocketIOServer server;
+    private ServiceUser serviceUser;
     private JTextArea textArea;
     private final int PORT_NUMBER = 9999;
 
@@ -33,6 +37,7 @@ public class Service {
 
     private Service(JTextArea textArea) {
         this.textArea = textArea;
+        serviceUser = new ServiceUser();
     }
 
     public void startServer() {
@@ -48,9 +53,21 @@ public class Service {
         server.addEventListener("register", Model_Register.class, new DataListener<Model_Register>() {
             @Override
             public void onData(SocketIOClient sioc, Model_Register t, AckRequest ar) throws Exception {
-                Model_Message message = new ServiceUser().register(t);
-                ar.sendAckData(message.isAction(), message.getMessage());
+                Model_Message message = serviceUser.register(t);
+                ar.sendAckData(message.isAction(), message.getMessage(), message.getData());
                 textArea.append("User has Register :" + t.getUsername() + " Pass :" + t.getPassword() + "\n");
+                server.getBroadcastOperations().sendEvent("list_user", (Model_User_Account) message.getData());
+            }
+        });
+        server.addEventListener("list_user", Integer.class, new DataListener<Integer>() {
+            @Override
+            public void onData(SocketIOClient sioc, Integer userID, AckRequest ar) throws Exception {
+                try {
+                    List<Model_User_Account> list = serviceUser.getUser(userID);
+                    sioc.sendEvent("list_user", list.toArray());
+                } catch (SQLException e) {
+                    System.err.println(e);
+                }
             }
         });
         server.start();

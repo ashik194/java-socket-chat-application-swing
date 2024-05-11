@@ -9,6 +9,7 @@ package model;
  * @author ORANGEBD
  */
 public class Model_User_Account {
+
     public int getUserID() {
         return userID;
     }
