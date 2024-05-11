@@ -15,7 +15,7 @@ public class PublicEvent {
     private EventChat eventChat;
     private EventLogin eventLogin;
     private EventMain eventMain;
-//    private EventMenuLeft eventMenuLeft;
+    private EventMenuLeft eventMenuLeft;
 
     public static PublicEvent getInstance() {
         if (instance == null) {
@@ -59,10 +59,15 @@ public class PublicEvent {
     public EventMain getEventMain() {
         return eventMain;
     }
-//
-//    public void addEventMenuLeft(EventMenuLeft event) {
-//        this.eventMenuLeft = event;
-//    }
+
+    public void addEventMenuLeft(EventMenuLeft event) {
+        this.eventMenuLeft = event;
+    }
+    
+    public EventMenuLeft getEventMenuLeft() {
+        return eventMenuLeft;
+    }
+    
 //
 //
 //    public EventImageView getEventImageView() {
@@ -72,7 +77,4 @@ public class PublicEvent {
 
 //
 //
-//    public EventMenuLeft getEventMenuLeft() {
-//        return eventMenuLeft;
-//    }
 }

@@ -5,6 +5,11 @@
 package forms;
 
 import components.Person_List;
+import event.EventMenuLeft;
+import event.PublicEvent;
+import java.util.ArrayList;
+import java.util.List;
+import model.Model_User_Account;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -16,6 +21,9 @@ public class Left_Menu extends javax.swing.JPanel {
     /**
      * Creates new form Right_Menu
      */
+    
+    private List<Model_User_Account> userAccount;
+    
     public Left_Menu() {
         initComponents();
         init();
@@ -23,14 +31,24 @@ public class Left_Menu extends javax.swing.JPanel {
     
     private void init(){
         chatList.setLayout(new MigLayout("fillx", "0[]0", "0[]0"));
+        userAccount = new ArrayList<>();
+        PublicEvent.getInstance().addEventMenuLeft(new EventMenuLeft() {
+            @Override
+            public void newUser(List<Model_User_Account> users) {
+                for (Model_User_Account d : users) {
+                    userAccount.add(d);
+                    chatList.add(new Person_List(d.getUserName()), "Wrap");
+                    refreshChatList();
+                }
+            }
+        });
         showPersonList();
     }
     
     private void showPersonList(){
         chatList.removeAll();
-        for(int i=0; i<20; i++){
-            String person = "Person-"+(i+1);
-            chatList.add(new Person_List(person), "Wrap");
+        for (Model_User_Account d : userAccount) {
+            chatList.add(new Person_List(d.getUserName()), "wrap");
         }
         refreshChatList();
     }
