@@ -16,6 +16,7 @@ import model.Model_Message;
 import model.Model_Register;
 import model.Model_User_Account;
 import java.sql.SQLException;
+import model.Model_Login;
 
 /**
  *
@@ -57,6 +58,17 @@ public class Service {
                 ar.sendAckData(message.isAction(), message.getMessage(), message.getData());
                 textArea.append("User has Register :" + t.getUsername() + " Pass :" + t.getPassword() + "\n");
                 server.getBroadcastOperations().sendEvent("list_user", (Model_User_Account) message.getData());
+            }
+        });
+        server.addEventListener("login", Model_Login.class, new DataListener<Model_Login>() {
+            @Override
+            public void onData(SocketIOClient sioc, Model_Login t, AckRequest ar) throws Exception {
+                Model_User_Account login = serviceUser.login(t);
+                if (login != null) {
+                    ar.sendAckData(true, login);
+                } else {
+                    ar.sendAckData(false);
+                }
             }
         });
         server.addEventListener("list_user", Integer.class, new DataListener<Integer>() {

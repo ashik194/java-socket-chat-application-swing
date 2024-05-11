@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import model.Model_Login;
 import model.Model_Message;
 import model.Model_Register;
 import model.Model_User_Account;
@@ -76,6 +77,24 @@ public class ServiceUser {
         }
         return message;
     }
+    
+    public Model_User_Account login(Model_Login login) throws SQLException {
+        Model_User_Account data = null;
+        PreparedStatement p = con.prepareStatement(LOGIN);
+        p.setString(1, login.getUserName());
+        p.setString(2, login.getPassword());
+        ResultSet r = p.executeQuery();
+        if (r.first()) {
+            int userID = r.getInt(1);
+            String userName = r.getString(2);
+            String gender = r.getString(3);
+            String image = r.getString(4);
+            data = new Model_User_Account(userID, userName, gender, image, true);
+        }
+        r.close();
+        p.close();
+        return data;
+    }
 
     
     public List<Model_User_Account> getUser(int exitUser) throws SQLException {
@@ -95,7 +114,7 @@ public class ServiceUser {
         return list;
     }
 
-    //  SQL
+    private final String LOGIN = "select UserID, user_account.UserName, Gender, ImageString from `user` join user_account using (UserID) where `user`.UserName=BINARY(?) and `user`.`Password`=BINARY(?) and user_account.`Status`='1'";
     private final String SELECT_USER_ACCOUNT = "select UserID, UserName, Gender, ImageString from user_account where user_account.`Status`='1' and UserID<>?";
     private final String INSERT_USER = "insert into user (UserName, `Password`) values (?,?)";
     private final String INSERT_USER_ACCOUNT = "insert into user_account (UserID, UserName) values (?,?)";
