@@ -9,8 +9,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import model.Model_Message;
 import model.Model_Register;
+import model.Model_User_Account;
 
 /**
  *
@@ -30,7 +33,7 @@ public class ServiceUser {
             ResultSet r = p.executeQuery();
             if (r.first()) {
                 message.setAction(false);
-                message.setMessage("User Already Exists");
+                message.setMessage("User Already Exit");
             } else {
                 message.setAction(true);
             }
@@ -38,22 +41,65 @@ public class ServiceUser {
             p.close();
             if (message.isAction()) {
                 //  Insert User Register
-                p = con.prepareStatement(INSERT_USER);
+                con.setAutoCommit(false);
+                p = con.prepareStatement(INSERT_USER, PreparedStatement.RETURN_GENERATED_KEYS);
                 p.setString(1, data.getUsername());
                 p.setString(2, data.getPassword());
                 p.execute();
+                r = p.getGeneratedKeys();
+                r.first();
+                int userID = r.getInt(1);
+                r.close();
                 p.close();
+                //  Create user account
+                p = con.prepareStatement(INSERT_USER_ACCOUNT);
+                p.setInt(1, userID);
+                p.setString(2, data.getUsername());
+                p.execute();
+                p.close();
+                con.commit();
+                con.setAutoCommit(true);
                 message.setAction(true);
                 message.setMessage("Ok");
+                message.setData(new Model_User_Account(userID, data.getUsername(), "", "", true));
             }
         } catch (SQLException e) {
             message.setAction(false);
             message.setMessage("Server Error");
+            try {
+                if (con.getAutoCommit() == false) {
+                    con.rollback();
+                    con.setAutoCommit(true);
+                }
+            } catch (SQLException e1) {
+            }
         }
         return message;
     }
-    private final String INSERT_USER = "insert into user (`username`, `password`) values (?,?)";
-    private final String CHECK_USER = "select userID from user where username =? limit 1";
+
+    
+    public List<Model_User_Account> getUser(int exitUser) throws SQLException {
+        List<Model_User_Account> list = new ArrayList<>();
+        PreparedStatement p = con.prepareStatement(SELECT_USER_ACCOUNT);
+        p.setInt(1, exitUser);
+        ResultSet r = p.executeQuery();
+        while (r.next()) {
+            int userID = r.getInt(1);
+            String userName = r.getString(2);
+            String gender = r.getString(3);
+            String image = r.getString(4);
+            list.add(new Model_User_Account(userID, userName, gender, image, true));
+        }
+        r.close();
+        p.close();
+        return list;
+    }
+
+    //  SQL
+    private final String SELECT_USER_ACCOUNT = "select UserID, UserName, Gender, ImageString from user_account where user_account.`Status`='1' and UserID<>?";
+    private final String INSERT_USER = "insert into user (UserName, `Password`) values (?,?)";
+    private final String INSERT_USER_ACCOUNT = "insert into user_account (UserID, UserName) values (?,?)";
+    private final String CHECK_USER = "select UserID from user where UserName =? limit 1";
     //  Instance
     private final Connection con;
 }
