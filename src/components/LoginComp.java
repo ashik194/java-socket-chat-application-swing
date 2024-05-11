@@ -5,6 +5,7 @@
 package components;
 
 import event.PublicEvent;
+import model.Model_Login;
 
 /**
  *
@@ -118,7 +119,7 @@ public class LoginComp extends javax.swing.JPanel {
 
     private void submitloginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitloginActionPerformed
         // TODO add your handling code here:
-        PublicEvent.getInstance().getEventLogin().login();
+        PublicEvent.getInstance().getEventLogin().login(new Model_Login(txtUsername.getText(), String.valueOf(txtPassword.getPassword())));
     }//GEN-LAST:event_submitloginActionPerformed
 
 

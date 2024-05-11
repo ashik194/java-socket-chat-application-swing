@@ -158,7 +158,7 @@ public class RegisterComp extends javax.swing.JPanel {
                     if (!message.isAction()) {
                         lbError.setText(message.getMessage());
                     } else {
-                        PublicEvent.getInstance().getEventLogin().login();
+//                        PublicEvent.getInstance().getEventLogin().login();
                     }
                 }
             });
