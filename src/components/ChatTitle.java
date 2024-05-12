@@ -5,6 +5,7 @@
 package components;
 
 import java.awt.Color;
+import model.Model_User_Account;
 
 /**
  *
@@ -15,13 +16,42 @@ public class ChatTitle extends javax.swing.JPanel {
     /**
      * Creates new form ChatBody
      */
+    
+    public Model_User_Account getUser() {
+        return user;
+    }
+
+    private Model_User_Account user;
+    
     public ChatTitle() {
         initComponents();
     }
     
-    public void setUserName(String username){
-        lbName.setText(username);
+    public void setUserName(Model_User_Account user) {
+        this.user = user;
+        System.out.println(user);
+        lbName.setText(user.getUserName());
+        if (user.isStatus()) {
+            statusActive();
+        } else {
+            setStatusText("Offline");
+        }
     }
+
+    public void updateUser(Model_User_Account user) {
+        if (this.user == user) {
+            lbName.setText(user.getUserName());
+            if (user.isStatus()) {
+                statusActive();
+            } else {
+                setStatusText("Offline");
+            }
+        }
+    }
+    
+//    public void setUserName(String username){
+//        lbName.setText(username);
+//    }
     
     public void statusActive(){
         lbStatus.setText("Active Now");

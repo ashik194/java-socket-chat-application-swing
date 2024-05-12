@@ -4,6 +4,7 @@
  */
 package forms;
 
+import model.Model_User_Account;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -15,6 +16,9 @@ public class Home extends javax.swing.JLayeredPane {
     /**
      * Creates new form Home
      */
+    
+    private Chat chat;
+    
     public Home() {
         initComponents();
         init();
@@ -23,8 +27,21 @@ public class Home extends javax.swing.JLayeredPane {
     private void init(){
         setLayout(new MigLayout("fillx, filly", "0[200!]5[fill, 100%]5[200!]0", "0[fill]0"));
         this.add(new Left_Menu());
-        this.add(new Chat());
+//        Chat chat = new Chat();
+        this.chat = new Chat();
+        this.chat.setVisible(false);
+        this.add(this.chat);
         this.add(new Right_Menu());
+        this.chat.setVisible(false);
+    }
+    
+    public void setUser(Model_User_Account user) {
+        chat.setUser(user);
+        chat.setVisible(true);
+    }
+
+    public void updateUser(Model_User_Account user) {
+        chat.updateUser(user);
     }
 
     /**

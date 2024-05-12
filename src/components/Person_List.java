@@ -4,6 +4,7 @@
  */
 package components;
 
+import event.PublicEvent;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -27,6 +28,7 @@ public class Person_List extends javax.swing.JPanel {
         return user;
     }
 
+    private boolean mouseOver;
     private final Model_User_Account user;
 
     public Person_List(Model_User_Account user) {
@@ -46,11 +48,20 @@ public class Person_List extends javax.swing.JPanel {
             @Override
             public void mouseEntered(MouseEvent me) {
                 setBackground(new Color(230, 230, 230));
+                mouseOver = true;
             }
 
             @Override
             public void mouseExited(MouseEvent me) {
                 setBackground(new Color(242, 242, 242));
+                mouseOver = false;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent me) {
+                if (mouseOver) {
+                    PublicEvent.getInstance().getEventMain().selectUser(user);
+                }
             }
         });
     }

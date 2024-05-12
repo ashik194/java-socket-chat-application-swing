@@ -11,6 +11,8 @@ import java.awt.event.AdjustmentListener;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollBar;
+import model.Model_Receive_Message;
+import model.Model_Send_Message;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -37,7 +39,7 @@ public class ChatBody extends javax.swing.JPanel {
 //        addItemRight("hello\nerererew\newewe",new ImageIcon(getClass().getResource("/icons/testing/dog.jpg")), new ImageIcon(getClass().getResource("/icons/testing/dog.jpg")));
 //        addItemFile("","Kamal","Test.pdf","1 MB");
 //        addItemFileRight("Testing","Test.pdf","1 MB");
-        addItemLeft("Hi, How are you?","Kamal");
+//        addItemLeft("Hi, How are you?","Kamal");
     }
     
     private void init(){
@@ -46,16 +48,24 @@ public class ChatBody extends javax.swing.JPanel {
         sp.getVerticalScrollBar().setBackground(Color.WHITE);
     }
     
-    public void addItemLeft(String text, String user, Icon ...image){
+//    public void addItemLeft(String text, String user, Icon ...image){
+//        Chat_left item = new Chat_left();
+//        item.setText(text);
+//        item.setImage(image);
+//        item.setUserProfile(user);
+//        body.add(item, "wrap, w 100::80%"); 
+//        body.repaint();
+//        body.revalidate();
+//    }
+
+
+    public void addItemLeft(Model_Receive_Message data){
         Chat_left item = new Chat_left();
-        item.setText(text);
-        item.setImage(image);
-        item.setUserProfile(user);
+        item.setText(data.getText());
         body.add(item, "wrap, w 100::80%"); 
-        body.repaint();
-        body.revalidate();
-    }
-    
+        repaint();
+        revalidate();
+    }    
     public void addItemLeft(String text, String user, String[] image){
         Chat_left_with_profile item = new Chat_left_with_profile();
         item.setText(text);
@@ -78,13 +88,13 @@ public class ChatBody extends javax.swing.JPanel {
     }
     
     
-    public void addItemRight(String text, Icon ...image){
+    public void addItemRight(Model_Send_Message data){
         Chat_right item = new Chat_right();
-        item.setText(text);
+        item.setText(data.getText());
         body.add(item, "wrap, al right, w 100::80%");
-        item.setImage(image);
-        body.repaint();
-        body.revalidate();
+//        item.setImage(image);
+        repaint();
+        revalidate();
         item.setTime();
         scrollToBottom();
     }
@@ -100,7 +110,6 @@ public class ChatBody extends javax.swing.JPanel {
     }
     
     
-    
     public void addDate(String date){
         ChatDate item = new ChatDate();
         item.setMSGDate(date);
@@ -109,6 +118,11 @@ public class ChatBody extends javax.swing.JPanel {
         body.revalidate();
     }
 
+    public void clearChat() {
+        body.removeAll();
+        repaint();
+        revalidate();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

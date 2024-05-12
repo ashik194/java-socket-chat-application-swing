@@ -14,6 +14,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import swing.ComponentResizer;
 import javax.swing.JFrame;
+import model.Model_User_Account;
 import service.Service;
 
 /**
@@ -57,6 +58,16 @@ public class Main extends javax.swing.JFrame {
                 home.setVisible(true);
                 login.setVisible(false);
                 Service.getInstance().getClient().emit("list_user", Service.getInstance().getUser().getUserID());
+            }
+            
+            @Override
+            public void selectUser(Model_User_Account user) {
+                home.setUser(user);
+            }
+
+            @Override
+            public void updateUser(Model_User_Account user) {
+                home.updateUser(user);
             }
         });
         PublicEvent.getInstance().addEventImageView(new EventImageView() {

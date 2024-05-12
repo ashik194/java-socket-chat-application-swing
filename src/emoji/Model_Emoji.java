@@ -1,4 +1,4 @@
-package com.raven.emoji;
+package emoji;
 
 import java.awt.Image;
 import javax.swing.Icon;
