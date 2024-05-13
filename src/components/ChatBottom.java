@@ -4,6 +4,7 @@
  */
 package components;
 
+import app.MessageType;
 import event.EventChat;
 import event.PublicEvent;
 import java.awt.Color;
@@ -42,6 +43,7 @@ public class ChatBottom extends javax.swing.JPanel {
 
     public void setUser(Model_User_Account user) {
         this.user = user;
+        panelMore.setUser(user);
     }
 
     private Model_User_Account user;
@@ -135,7 +137,7 @@ public class ChatBottom extends javax.swing.JPanel {
     private void eventSend(JIMSendTextPane txt) {
         String text = txt.getText().trim();
         if (!text.equals("")) {
-            Model_Send_Message message = new Model_Send_Message(Service.getInstance().getUser().getUserID(), user.getUserID(), text);
+            Model_Send_Message message = new Model_Send_Message(MessageType.TEXT, Service.getInstance().getUser().getUserID(), user.getUserID(), text);
             send(message);
             PublicEvent.getInstance().getEventChat().sendMessage(message);
             txt.setText("");

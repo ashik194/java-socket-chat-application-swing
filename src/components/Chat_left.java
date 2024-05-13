@@ -48,6 +48,11 @@ public class Chat_left extends javax.swing.JLayeredPane {
     public void setFile(String fileName, String fileSize){
         txt.setFIle(fileName, fileSize);
     }
+    
+    public void setEmoji(Icon icon) {
+        txt.hideText();
+        txt.setEmoji(false, icon);
+    }
 
     public void setTime() {
         txt.setTime("10:30 PM");    //  Testing

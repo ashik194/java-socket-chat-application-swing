@@ -4,6 +4,8 @@
  */
 package components;
 
+import app.MessageType;
+import emoji.Emogi;
 import java.awt.Adjustable;
 import java.awt.Color;
 import java.awt.event.AdjustmentEvent;
@@ -60,9 +62,20 @@ public class ChatBody extends javax.swing.JPanel {
 
 
     public void addItemLeft(Model_Receive_Message data){
-        Chat_left item = new Chat_left();
-        item.setText(data.getText());
-        body.add(item, "wrap, w 100::80%"); 
+//        Chat_left item = new Chat_left();
+//        item.setText(data.getText());
+//        body.add(item, "wrap, w 100::80%");
+        if (data.getMessageType() == MessageType.TEXT) {
+            Chat_left item = new Chat_left();
+            item.setText(data.getText());
+            item.setTime();
+            body.add(item, "wrap, w 100::80%");
+        } else if (data.getMessageType() == MessageType.EMOJI) {
+            Chat_left item = new Chat_left();
+            item.setEmoji(Emogi.getInstance().getImoji(Integer.valueOf(data.getText())).getIcon());
+            item.setTime();
+            body.add(item, "wrap, w 100::80%");
+        }
         repaint();
         revalidate();
     }    
@@ -89,13 +102,23 @@ public class ChatBody extends javax.swing.JPanel {
     
     
     public void addItemRight(Model_Send_Message data){
-        Chat_right item = new Chat_right();
-        item.setText(data.getText());
-        body.add(item, "wrap, al right, w 100::80%");
+//        Chat_right item = new Chat_right();
+//        item.setText(data.getText());
+//        body.add(item, "wrap, al right, w 100::80%");
 //        item.setImage(image);
+        if (data.getMessageType() == MessageType.TEXT) {
+            Chat_right item = new Chat_right();
+            item.setText(data.getText());
+            body.add(item, "wrap, al right, w 100::80%");
+            item.setTime();
+        } else if (data.getMessageType() == MessageType.EMOJI) {
+            Chat_right item = new Chat_right();
+            item.setEmoji(Emogi.getInstance().getImoji(Integer.valueOf(data.getText())).getIcon());
+            body.add(item, "wrap, al right, w 100::80%");
+            item.setTime();
+        }
         repaint();
         revalidate();
-        item.setTime();
         scrollToBottom();
     }
     
@@ -152,7 +175,7 @@ public class ChatBody extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(sp, javax.swing.GroupLayout.PREFERRED_SIZE, 496, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(sp, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
