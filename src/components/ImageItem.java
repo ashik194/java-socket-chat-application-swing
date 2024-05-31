@@ -4,13 +4,17 @@
  */
 package components;
 
+import event.EventFileReceiver;
 import event.EventFileSender;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import model.Model_File_Sender;
 import model.Model_Receive_Image;
+import service.Service;
 import swing.blur.BlurHash;
 
 /**
@@ -59,6 +63,16 @@ public class ImageItem extends javax.swing.JLayeredPane {
         });
         pic.setImage(image);
     }
+//    public void setImage(Model_Receive_Image dataImage) {
+//        int width = dataImage.getWidth();
+//        int height = dataImage.getHeight();
+//        int[] data = BlurHash.decode(dataImage.getImage(), width, height, 1);
+//        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+//        img.setRGB(0, 0, width, height, data, 0, width);
+//        Icon icon = new ImageIcon(img);
+//        pic.setImage(icon);
+//    }
+    
     public void setImage(Model_Receive_Image dataImage) {
         int width = dataImage.getWidth();
         int height = dataImage.getHeight();
@@ -67,6 +81,27 @@ public class ImageItem extends javax.swing.JLayeredPane {
         img.setRGB(0, 0, width, height, data, 0, width);
         Icon icon = new ImageIcon(img);
         pic.setImage(icon);
+        try {
+            Service.getInstance().addFileReceiver(dataImage.getFileID(), new EventFileReceiver() {
+                @Override
+                public void onReceiving(double percentage) {
+                    progress.setValue((int) percentage);
+                }
+
+                @Override
+                public void onStartReceiving() {
+
+                }
+
+                @Override
+                public void onFinish(File file) {
+                    progress.setVisible(false);
+                    pic.setImage(new ImageIcon(file.getAbsolutePath()));
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.

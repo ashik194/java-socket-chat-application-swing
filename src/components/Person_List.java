@@ -34,8 +34,11 @@ public class Person_List extends javax.swing.JPanel {
     public Person_List(Model_User_Account user) {
         this.user = user;
         initComponents();
-        personName.setText(user.getUserName());
-        activeStatus.setActive(user.isStatus());
+        if(user != null)
+        {
+            personName.setText(user.getUserName());
+            activeStatus.setActive(user.isStatus());
+        }
         init();
     }
 

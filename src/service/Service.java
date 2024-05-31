@@ -4,6 +4,7 @@
  */
 package service;
 
+import event.EventFileReceiver;
 import event.PublicEvent;
 import io.socket.client.IO;
 import io.socket.emitter.Emitter;
@@ -14,6 +15,7 @@ import java.net.URISyntaxException;
 import model.Model_User_Account;
 import java.util.ArrayList;
 import java.util.List;
+import model.Model_File_Receiver;
 import model.Model_File_Sender;
 import model.Model_Receive_Message;
 import model.Model_Send_Message;
@@ -29,6 +31,7 @@ public class Service {
     private final String IP = "localhost";
     private Model_User_Account user;
     private List<Model_File_Sender> fileSender;
+    private List<Model_File_Receiver> fileReceiver;
 
     public static Service getInstance() {
         if (instance == null) {
@@ -39,6 +42,7 @@ public class Service {
 
     private Service() {
         fileSender = new ArrayList<>();
+        fileReceiver = new ArrayList<>();
     }
 
     public void startServer() {
@@ -101,6 +105,21 @@ public class Service {
         if (!fileSender.isEmpty()) {
             //  Start send new file when old file sending finish
             fileSender.get(0).initSend();
+        }
+    }
+    
+     public void fileReceiveFinish(Model_File_Receiver data) throws IOException {
+        fileReceiver.remove(data);
+        if (!fileReceiver.isEmpty()) {
+            fileReceiver.get(0).initReceive();
+        }
+    }
+
+    public void addFileReceiver(int fileID, EventFileReceiver event) throws IOException {
+        Model_File_Receiver data = new Model_File_Receiver(fileID, client, event);
+        fileReceiver.add(data);
+        if (fileReceiver.size() == 1) {
+            data.initReceive();
         }
     }
 
