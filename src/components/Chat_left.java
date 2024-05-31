@@ -5,6 +5,8 @@
 package components;
 
 import java.awt.Color;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.Icon;
 import model.Model_Receive_Image;
 
@@ -60,7 +62,10 @@ public class Chat_left extends javax.swing.JLayeredPane {
     }
 
     public void setTime() {
-        txt.setTime("10:30 PM");    //  Testing
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+        String currentTime = dateFormat.format(date);
+        txt.setTime(currentTime);    //  Testing
     }
 
     /**
