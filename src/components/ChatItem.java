@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.border.EmptyBorder;
+import model.Model_File_Sender;
 
 /**
  *
@@ -65,16 +66,28 @@ public class ChatItem extends javax.swing.JLayeredPane {
         add(layer);
     }
     
-    public void setImage(boolean right, Icon... image) {
-        if(image.length > 0){
+//    public void setImage(boolean right, Icon... image) {
+//        if(image.length > 0){
+//            JLayeredPane layer = new JLayeredPane();
+//            layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
+//            layer.setBorder(new EmptyBorder(0, 5, 0, 5));
+//            Chat_Image chatImage = new Chat_Image(right);
+//            chatImage.addImage(image);
+//            layer.add(chatImage);
+//            add(layer);
+//        }
+//    }
+    
+    public void setImage(boolean right, Model_File_Sender fileSender) {
+//        if(fileSender.length > 0){
             JLayeredPane layer = new JLayeredPane();
             layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
             layer.setBorder(new EmptyBorder(0, 5, 0, 5));
             Chat_Image chatImage = new Chat_Image(right);
-            chatImage.addImage(image);
+            chatImage.addImage(fileSender);
             layer.add(chatImage);
             add(layer);
-        }
+//        }
     }
     
     public void setImage(boolean right, String... image) {

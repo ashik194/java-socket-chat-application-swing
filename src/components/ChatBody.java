@@ -109,13 +109,20 @@ public class ChatBody extends javax.swing.JPanel {
         if (data.getMessageType() == MessageType.TEXT) {
             Chat_right item = new Chat_right();
             item.setText(data.getText());
-            body.add(item, "wrap, al right, w 100::80%");
             item.setTime();
+            body.add(item, "wrap, al right, w 100::80%");
         } else if (data.getMessageType() == MessageType.EMOJI) {
             Chat_right item = new Chat_right();
             item.setEmoji(Emogi.getInstance().getImoji(Integer.valueOf(data.getText())).getIcon());
-            body.add(item, "wrap, al right, w 100::80%");
             item.setTime();
+            body.add(item, "wrap, al right, w 100::80%");
+        }else if (data.getMessageType() == MessageType.IMAGE) {
+            Chat_right item = new Chat_right();
+            item.setText("");
+            item.setImage(data.getFile());
+            item.setTime();
+            body.add(item, "wrap, al right, w 100::80%");
+
         }
         repaint();
         revalidate();

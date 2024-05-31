@@ -5,7 +5,10 @@
 package components;
 
 import java.awt.Color;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.Icon;
+import model.Model_File_Sender;
 
 /**
  *
@@ -30,8 +33,12 @@ public class Chat_right extends javax.swing.JLayeredPane {
         txt.seenMessage();
     }
 
-    public void setImage(Icon... image) {
-        txt.setImage(true, image);
+//    public void setImage(Icon... image) {
+//        txt.setImage(true, image);
+//    }
+    
+    public void setImage(Model_File_Sender fileSender) {
+        txt.setImage(true, fileSender);
     }
     
     public void setImage(String... image) {
@@ -48,7 +55,11 @@ public class Chat_right extends javax.swing.JLayeredPane {
     }
     
     public void setTime() {
-        txt.setTime("10:30 PM");    //  Testing
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+        String currentTime = dateFormat.format(currentDate);
+//        txt.setTime("12:30 PM");    //  Testing
+        txt.setTime(currentTime);
     }
 
     /**
