@@ -3,7 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/ORANGEBD/Documents/NetBeansProjects/ChatServer/src/service/ServiceUser.java</file>
+            <file>file:/C:/Users/ORANGEBD/Documents/NetBeansProjects/ChatServer/src/model/Model_User_Account.java</file>
             <file>file:/C:/Users/ORANGEBD/Documents/NetBeansProjects/ChatServer/src/service/Service.java</file>
+            <file>file:/C:/Users/ORANGEBD/Documents/NetBeansProjects/ChatServer/src/model/Model_Receive_Message.java</file>
+            <file>file:/C:/Users/ORANGEBD/Documents/NetBeansProjects/ChatServer/src/model/Model_Send_Message.java</file>
         </group>
     </open-files>
 </project-private>

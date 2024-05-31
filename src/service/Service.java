@@ -4,6 +4,7 @@
  */
 package service;
 
+import app.MessageType;
 import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOClient;
@@ -11,6 +12,7 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
+import java.io.IOException;
 import java.util.List;
 import javax.swing.JTextArea;
 import model.Model_Message;
@@ -19,7 +21,10 @@ import model.Model_User_Account;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import model.Model_Client;
+import model.Model_File;
 import model.Model_Login;
+import model.Model_Package_Sender;
+import model.Model_Receive_Image;
 import model.Model_Receive_Message;
 import model.Model_Send_Message;
 
@@ -31,6 +36,7 @@ public class Service {
     private static Service instance;
     private SocketIOServer server;
     private ServiceUser serviceUser;
+    private ServiceFile serviceFile;
     private List<Model_Client> listClient;
     private JTextArea textArea;
     private final int PORT_NUMBER = 9999;
@@ -45,6 +51,7 @@ public class Service {
     private Service(JTextArea textArea) {
         this.textArea = textArea;
         serviceUser = new ServiceUser();
+        serviceFile = new ServiceFile();
         listClient = new ArrayList<>();
     }
 
@@ -95,7 +102,29 @@ public class Service {
         server.addEventListener("send_to_user", Model_Send_Message.class, new DataListener<Model_Send_Message>() {
             @Override
             public void onData(SocketIOClient sioc, Model_Send_Message t, AckRequest ar) throws Exception {
-                sendToClient(t);
+                sendToClient(t, ar);
+            }
+        });
+        server.addEventListener("send_file", Model_Package_Sender.class, new DataListener<Model_Package_Sender>() {
+            @Override
+            public void onData(SocketIOClient sioc, Model_Package_Sender t, AckRequest ar) throws Exception {
+                try {
+                    serviceFile.receiveFile(t);
+                    if (t.isFinish()) {
+                        ar.sendAckData(true);
+                        Model_Receive_Image dataImage = new Model_Receive_Image();
+                        dataImage.setFileID(t.getFileID());
+                        Model_Send_Message message = serviceFile.closeFile(dataImage);
+                        //  Send to client 'message'
+                        sendTempFileToClient(message, dataImage);
+
+                    } else {
+                        ar.sendAckData(true);
+                    }
+                } catch (IOException | SQLException e) {
+                    ar.sendAckData(false);
+                    e.printStackTrace();
+                }
             }
         });
         server.addDisconnectListener(new DisconnectListener() {
@@ -125,10 +154,38 @@ public class Service {
         listClient.add(new Model_Client(client, user));
     }
     
-    private void sendToClient(Model_Send_Message data) {
+//    private void sendToClient(Model_Send_Message data) {
+//        for (Model_Client c : listClient) {
+//            if (c.getUser().getUserID() == data.getToUserID()) {
+//                c.getClient().sendEvent("receive_ms", new Model_Receive_Message(data.getMessageType(), data.getFromUserID(), data.getText(), null));
+//                break;
+//            }
+//        }
+//    }
+    
+    private void sendToClient(Model_Send_Message data, AckRequest ar) {
+        if (data.getMessageType() == MessageType.IMAGE.getValue() || data.getMessageType() == MessageType.FILE.getValue()) {
+            try {
+                Model_File file = serviceFile.addFileReceiver(data.getText());
+                serviceFile.initFile(file, data);
+                ar.sendAckData(file.getFileID());
+            } catch (IOException | SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            for (Model_Client c : listClient) {
+                if (c.getUser().getUserID() == data.getToUserID()) {
+                    c.getClient().sendEvent("receive_ms", new Model_Receive_Message(data.getMessageType(), data.getFromUserID(), data.getText(), null));
+                    break;
+                }
+            }
+        }
+    }
+    
+    private void sendTempFileToClient(Model_Send_Message data, Model_Receive_Image dataImage) {
         for (Model_Client c : listClient) {
             if (c.getUser().getUserID() == data.getToUserID()) {
-                c.getClient().sendEvent("receive_ms", new Model_Receive_Message(data.getMessageType(), data.getFromUserID(), data.getText()));
+                c.getClient().sendEvent("receive_ms", new Model_Receive_Message(data.getMessageType(), data.getFromUserID(), data.getText(), dataImage));
                 break;
             }
         }
