@@ -15,6 +15,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 import model.Model_File_Sender;
+import model.Model_Receive_Image;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -49,13 +50,11 @@ public class Chat_Image extends javax.swing.JPanel {
             addEvent(pic, image);
             add(pic, "wrap");
     }
-    public void addImage(String... images) {
-        for (String image : images) {
+    public void addImage(Model_Receive_Image dataImage) {
             ImageItem pic = new ImageItem();
-            pic.setPreferredSize(new Dimension(200, 200));
-            pic.setImage(image);
+            pic.setPreferredSize(new Dimension(dataImage.getWidth(), dataImage.getHeight()));
+            pic.setImage(dataImage);
             add(pic, "wrap");
-        }
     }
     
     private void addEvent(Component com, Icon image) {

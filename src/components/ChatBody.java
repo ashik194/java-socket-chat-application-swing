@@ -75,6 +75,12 @@ public class ChatBody extends javax.swing.JPanel {
             item.setEmoji(Emogi.getInstance().getImoji(Integer.valueOf(data.getText())).getIcon());
             item.setTime();
             body.add(item, "wrap, w 100::80%");
+        }else if (data.getMessageType() == MessageType.IMAGE) {
+            Chat_left item = new Chat_left();
+            item.setText("");
+            item.setImage(data.getDataImage());
+            item.setTime();
+            body.add(item, "wrap, w 100::80%");
         }
         repaint();
         revalidate();

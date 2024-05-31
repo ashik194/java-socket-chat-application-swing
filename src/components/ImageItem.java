@@ -4,11 +4,13 @@
  */
 package components;
 
+import event.EventFileSender;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import model.Model_File_Sender;
+import model.Model_Receive_Image;
 import swing.blur.BlurHash;
 
 /**
@@ -35,14 +37,32 @@ public class ImageItem extends javax.swing.JLayeredPane {
 //        pic.setImage(icon);
 //    }
 //    
+//    public void setImage(Icon image, Model_File_Sender fileSender) {
+//        pic.setImage(image);
+//    }
+    
     public void setImage(Icon image, Model_File_Sender fileSender) {
+        fileSender.addEvent(new EventFileSender() {
+            @Override
+            public void onSending(double percentage) {
+                progress.setValue((int) percentage);
+            }
+
+            @Override
+            public void onStartSending() {
+            }
+
+            @Override
+            public void onFinish() {
+                progress.setVisible(false);
+            }
+        });
         pic.setImage(image);
     }
-    
-    public void setImage(String image) {
-        int width = 200;
-        int height = 200;
-        int[] data = BlurHash.decode(image, width, height, 1);
+    public void setImage(Model_Receive_Image dataImage) {
+        int width = dataImage.getWidth();
+        int height = dataImage.getHeight();
+        int[] data = BlurHash.decode(dataImage.getImage(), width, height, 1);
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         img.setRGB(0, 0, width, height, data, 0, width);
         Icon icon = new ImageIcon(img);
