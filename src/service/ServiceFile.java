@@ -20,6 +20,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import model.Model_File;
 import model.Model_File_Receiver;
+import model.Model_File_Sender;
 import model.Model_Package_Sender;
 import model.Model_Receive_Image;
 import model.Model_Send_Message;
@@ -33,6 +34,7 @@ public class ServiceFile {
     public ServiceFile() {
         this.con = DatabaseConnection.getInstance().getConnection();
         this.fileReceivers = new HashMap<>();
+        this.fileSenders = new HashMap<>();
     }
 
     public Model_File addFileReceiver(String fileExtension) throws SQLException {
@@ -66,6 +68,38 @@ public class ServiceFile {
 
     public void initFile(Model_File file, Model_Send_Message message) throws IOException {
         fileReceivers.put(file.getFileID(), new Model_File_Receiver(message, toFileObject(file)));
+    }
+    
+    public Model_File getFile(int fileID) throws SQLException {
+        PreparedStatement p = con.prepareStatement(GET_FILE_EXTENSION);
+        p.setInt(1, fileID);
+        ResultSet r = p.executeQuery();
+        r.first();
+        String fileExtension = r.getString(1);
+        Model_File data = new Model_File(fileID, fileExtension);
+        r.close();
+        p.close();
+        return data;
+    }
+
+    public synchronized Model_File initFile(int fileID) throws IOException, SQLException {
+        Model_File file;
+        if (!fileSenders.containsKey(fileID)) {
+            file = getFile(fileID);
+            fileSenders.put(fileID, new Model_File_Sender(file, new File(PATH_FILE + fileID + file.getFileExtension())));
+        } else {
+            file = fileSenders.get(fileID).getData();
+        }
+        return file;
+    }
+
+    public byte[] getFileData(long currentLength, int fileID) throws IOException, SQLException {
+        initFile(fileID);
+        return fileSenders.get(fileID).read(currentLength);
+    }
+
+    public long getFileSize(int fileID) {
+        return fileSenders.get(fileID).getFileSize();
     }
 
     public void receiveFile(Model_Package_Sender dataPackage) throws IOException {
@@ -128,7 +162,9 @@ public class ServiceFile {
     private final String INSERT = "insert into files (FileExtension) values (?)";
     private final String UPDATE_BLUR_HASH_DONE = "update files set BlurHash=?, `Status`='1' where FileID=? limit 1";
     private final String UPDATE_DONE = "update files set `Status`='1' where FileID=? limit 1";
+    private final String GET_FILE_EXTENSION = "select FileExtension from files where FileID=? limit 1";
     //  Instance
     private final Connection con;
     private final Map<Integer, Model_File_Receiver> fileReceivers;
+    private final Map<Integer, Model_File_Sender> fileSenders;
 }
